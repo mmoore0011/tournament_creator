@@ -118,14 +118,16 @@ def application(environ, start_response):
                 if player in pair1:
                     player_table = table_num
                     partner_index = 1 if pair1[0] == player else 0
-                    player_partner = player_names[pair1[partner_index] - 1]
-                    player_opponents = [player_names[p - 1] for p in pair2]
+                    partner_number = pair1[partner_index]
+                    player_partner = f"{partner_number} - {player_names[partner_number - 1]}"
+                    player_opponents = [f"{p} - {player_names[p - 1]}" for p in pair2]
                     break
                 elif player in pair2:
                     player_table = table_num
                     partner_index = 1 if pair2[0] == player else 0
-                    player_partner = player_names[pair2[partner_index] - 1]
-                    player_opponents = [player_names[p - 1] for p in pair1]
+                    partner_number = pair2[partner_index]
+                    player_partner = f"{partner_number} - {player_names[partner_number - 1]}"
+                    player_opponents = [f"{p} - {player_names[p - 1]}" for p in pair1]
                     break
 
             if player in round_info['byes']:
@@ -134,6 +136,7 @@ def application(environ, start_response):
                 response_body += f"<tr><td>{round_number}</td><td>{player_table}</td><td>{player_partner}</td><td>{' & '.join(player_opponents)}</td></tr>"
 
         response_body += "</table>"
+
     response_body += "</body></html>"
 
     status = '200 OK'
