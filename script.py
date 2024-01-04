@@ -79,8 +79,12 @@ def application(environ, start_response):
 
     schedule, message = generate_schedule(players, tables, rounds)
 
-    response_body = "<html><body><h1>Tournament Schedule</h1>"
+    response_body = "<html><body>"
 
+    # Adding CSS for page breaks
+    response_body += "<style>.player-schedule { page-break-before: always; }</style>"
+
+    response_body += "<h1>Tournament Schedule</h1>"
     if message:
         response_body += f"<p>{message}</p>"
 
@@ -103,10 +107,10 @@ def application(environ, start_response):
             response_body += f"<td>{byes_str}</td></tr>"
         response_body += "</table>"
 
-    # Include individual player schedules with names
+    # Include individual player schedules with names and page breaks
     for player in range(1, players + 1):
         player_name = player_names[player - 1]
-        response_body += f"<h2>Player {player} - {player_name}</h2>"
+        response_body += f'<div class="player-schedule"><h2>Player {player} - {player_name}</h2>'
         response_body += "<table border='1'><tr><th>Round</th><th>Table</th><th>With</th><th>Against</th></tr>"
 
         for round_number, round_info in schedule.items():
@@ -135,7 +139,7 @@ def application(environ, start_response):
             elif player_table:
                 response_body += f"<tr><td>{round_number}</td><td>{player_table}</td><td>{player_partner}</td><td>{' & '.join(player_opponents)}</td></tr>"
 
-        response_body += "</table>"
+        response_body += "</table></div>"
 
     response_body += "</body></html>"
 
