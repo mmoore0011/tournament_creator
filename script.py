@@ -45,6 +45,10 @@ def generate_schedule(players, tables, rounds):
                     if len(round_pairs) == tables * 2:
                         break
 
+            # Check if an even number of pairs is formed
+            if len(round_pairs) % 2 != 0:
+                continue  # Re-shuffle and try again if odd number of pairs
+
             active_players = set(p for pair in round_pairs for p in pair)
             potential_byes = set(all_players) - active_players
 
@@ -53,7 +57,7 @@ def generate_schedule(players, tables, rounds):
             if not players_had_bye.isdisjoint(set(potential_byes)) and len(players_had_bye) < len(all_players):
                 continue
 
-            round_byes = random.sample(potential_byes, excess_players)
+            round_byes = random.sample(potential_byes, excess_players) if excess_players else []
             used_pairs.update(round_pairs)
             players_had_bye.update(set(round_byes))
             valid_round = True
