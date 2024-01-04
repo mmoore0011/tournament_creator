@@ -109,29 +109,23 @@ def application(environ, start_response):
         response_body += f"<h2>Player {player} - {player_name}</h2>"
         response_body += "<table border='1'><tr><th>Round</th><th>Table</th><th>With</th><th>Against</th></tr>"
 
-    for player in range(1, players + 1):
-        player_name = player_names[player - 1]
-        response_body += f"<h2>Player {player} - {player_name}</h2>"
-        response_body += "<table border='1'><tr><th>Round</th><th>Table</th><th>With</th><th>Against</th></tr>"
-
         for round_number, round_info in schedule.items():
             player_table = None
             player_partner = None
             player_opponents = []
 
             for table_num, (pair1, pair2) in enumerate(round_info['games'], 1):
-                pair1_names = [f"{p} - {player_names[p-1]}" for p in pair1]
-                pair2_names = [f"{p} - {player_names[p-1]}" for p in pair2]
-
                 if player in pair1:
                     player_table = table_num
-                    player_partner = next((name for name in pair1_names if str(player) not in name), "Unknown")
-                    player_opponents = pair2_names
+                    partner_index = 1 if pair1[0] == player else 0
+                    player_partner = player_names[pair1[partner_index] - 1]
+                    player_opponents = [player_names[p - 1] for p in pair2]
                     break
                 elif player in pair2:
                     player_table = table_num
-                    player_partner = next((name for name in pair2_names if str(player) not in name), "Unknown")
-                    player_opponents = pair1_names
+                    partner_index = 1 if pair2[0] == player else 0
+                    player_partner = player_names[pair2[partner_index] - 1]
+                    player_opponents = [player_names[p - 1] for p in pair1]
                     break
 
             if player in round_info['byes']:
@@ -140,7 +134,6 @@ def application(environ, start_response):
                 response_body += f"<tr><td>{round_number}</td><td>{player_table}</td><td>{player_partner}</td><td>{' & '.join(player_opponents)}</td></tr>"
 
         response_body += "</table>"
-
     response_body += "</body></html>"
 
     status = '200 OK'
