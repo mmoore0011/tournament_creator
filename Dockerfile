@@ -11,7 +11,6 @@ RUN pip3 install uwsgi
 RUN apk del build-deps
 
 # Copy the content
-COPY html /usr/share/nginx/html
 COPY conf /etc/nginx/conf.d
 COPY script.py /usr/share/nginx/
 COPY uwsgi/uwsgi.ini /usr/share/nginx/
