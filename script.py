@@ -109,6 +109,11 @@ def application(environ, start_response):
         response_body += f"<h2>Player {player} - {player_name}</h2>"
         response_body += "<table border='1'><tr><th>Round</th><th>Table</th><th>With</th><th>Against</th></tr>"
 
+    for player in range(1, players + 1):
+        player_name = player_names[player - 1]
+        response_body += f"<h2>Player {player} - {player_name}</h2>"
+        response_body += "<table border='1'><tr><th>Round</th><th>Table</th><th>With</th><th>Against</th></tr>"
+
         for round_number, round_info in schedule.items():
             player_table = None
             player_partner = None
@@ -120,12 +125,12 @@ def application(environ, start_response):
 
                 if player in pair1:
                     player_table = table_num
-                    player_partner = next(name for name in pair1_names if str(player) not in name)
+                    player_partner = next((name for name in pair1_names if str(player) not in name), "Unknown")
                     player_opponents = pair2_names
                     break
                 elif player in pair2:
                     player_table = table_num
-                    player_partner = next(name for name in pair2_names if str(player) not in name)
+                    player_partner = next((name for name in pair2_names if str(player) not in name), "Unknown")
                     player_opponents = pair1_names
                     break
 
